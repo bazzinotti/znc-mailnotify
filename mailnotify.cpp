@@ -408,7 +408,8 @@ class CNotifoMod : public CModule
     
       for (VCString::iterator i = values.begin(); i != values.end(); i++)
       {
-        CString value = CString(i);//->AsLower();
+        // this method used a closest method to a basic copy
+        CString value = i->StripControls_n();//->AsLower();
         //char prefix = value[0];
         bool notify = true;
     
