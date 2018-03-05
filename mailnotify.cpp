@@ -515,7 +515,7 @@ class CNotifoMod : public CModule
     {
       return away_only()
         && client_count_less_than()
-        && highlight(message, options["highlight_join"])
+        && highlight(nick.GetNick(), options["highlight_join"])
         && idle()
         && nick_blacklist(nick)
         && true;
@@ -617,19 +617,19 @@ class CNotifoMod : public CModule
 			return CONTINUE;
 		}
 
-		EModRet OnJoin(const CNick& nick, CChan& channel)
+		void OnJoin(const CNick& nick, CChan& channel)
 		{
       if (notify_join(nick))
       {
         CString title = "Join Highlight";
         CString msg = channel.GetName();
         msg += ": " + nick.GetNick();
-        msg += " " + "has joined!";
+        msg += " has joined!";
 
         send_message(msg, title, channel.GetName());
       }
 
-			return CONTINUE;
+		//	return CONTINUE;
 		}
 
 		/**
