@@ -26,10 +26,10 @@ using std::string;
 #endif
 
 // Debug output
-#define NOTIFO_DEBUG 0
+#define NOTIFO_DEBUG 1
 
 #if NOTIFO_DEBUG
-#define PutDebug(s) PutModule(s)
+#define PutDebug(s) do { if (do_debug()) PutModule(s); } while (0)
 #else
 #define PutDebug(s) //s
 #endif
@@ -80,6 +80,8 @@ class CNotifoMod : public CModule
 			// Current user
 			user = GetUser();
 			network = GetNetwork();
+
+			defaults["debug"] = "0";
 
 			// Condition strings
 			defaults["channel_conditions"] = "all";
@@ -446,6 +448,12 @@ class CNotifoMod : public CModule
 			unsigned int now = time(NULL);
 			return value == 0
 				|| idle_time + value < now;
+		}
+
+		bool do_debug()
+		{
+			unsigned int value = options["debug"].ToUInt();
+			return value == 1;
 		}
 
 		/**
