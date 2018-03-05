@@ -408,8 +408,8 @@ class CNotifoMod : public CModule
     
       for (VCString::iterator i = values.begin(); i != values.end(); i++)
       {
-        CString value = i;//->AsLower();
-        char prefix = value[0];
+        CString value = CString(i);//->AsLower();
+        //char prefix = value[0];
         bool notify = true;
     
         /*if (prefix == '-')
