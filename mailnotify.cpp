@@ -89,7 +89,7 @@ class CNotifoMod : public CModule
 			defaults["away_only"] = "no";
 			defaults["client_count_less_than"] = "1";
 			defaults["highlight"] = "";
-			defaults["join_highlight"] = "";
+			defaults["highlight_join"] = "";
 			defaults["idle"] = "0";
 			defaults["last_active"] = "0";
 			defaults["last_notification"] = "0";
@@ -293,7 +293,7 @@ class CNotifoMod : public CModule
 				expr("false", false)
 				expr("away_only", away_only())
 				expr("client_count_less_than", client_count_less_than())
-				expr("highlight", highlight(message))
+				expr("highlight", highlight(message, options["highlight"]))
 				expr("idle", idle())
 				expr("last_active", last_active(context))
 				expr("last_notification", last_notification(context))
@@ -352,12 +352,12 @@ class CNotifoMod : public CModule
 		 * @param message Message contents
 		 * @return True if message matches a highlight
 		 */
-		bool highlight(const CString& message)
+		bool highlight(const CString& message, const CString& highlight_str)
 		{
 			CString msg = " " + message.AsLower() + " ";
 
 			VCString values;
-			options["highlight"].Split(" ", values, false);
+			highlight_str.Split(" ", values, false);
 
 			for (VCString::iterator i = values.begin(); i != values.end(); i++)
 			{
@@ -494,7 +494,7 @@ class CNotifoMod : public CModule
 
 			return away_only()
 				&& client_count_less_than()
-				&& highlight(message)
+				&& highlight(message, options["highlight"])
 				&& idle()
 				&& last_active(context)
 				&& last_notification(context)
@@ -502,6 +502,24 @@ class CNotifoMod : public CModule
 				&& replied(context)
 				&& true;
 		}
+
+    /**
+     * Determine when to notify the user of a channel message.
+     *
+     * @param nick Nick that sent the message
+     * @param channel Channel the message was sent to
+     * @param message Message contents
+     * @return Notification should be sent
+     */
+    bool notify_join(const CNick& nick)
+    {
+      return away_only()
+        && client_count_less_than()
+        && highlight(message, options["highlight_join"])
+        && idle()
+        && nick_blacklist(nick)
+        && true;
+    }
 
 		/**
 		 * Determine when to notify the user of a private message.
@@ -599,8 +617,18 @@ class CNotifoMod : public CModule
 			return CONTINUE;
 		}
 
-		EModRet OnJoin(const CNick& nick,CChan& channel)
+		EModRet OnJoin(const CNick& nick, CChan& channel)
 		{
+      if (notify_join(nick))
+      {
+        CString title = "Join Highlight";
+        CString msg = channel.GetName();
+        msg += ": " + nick.GetNick();
+        msg += " " + "has joined!";
+
+        send_message(msg, title, channel.GetName());
+      }
+
 			return CONTINUE;
 		}
 
