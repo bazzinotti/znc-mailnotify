@@ -89,6 +89,7 @@ class CNotifoMod : public CModule
 			defaults["away_only"] = "no";
 			defaults["client_count_less_than"] = "1";
 			defaults["highlight"] = "";
+			defaults["join_highlight"] = "";
 			defaults["idle"] = "0";
 			defaults["last_active"] = "0";
 			defaults["last_notification"] = "0";
@@ -595,6 +596,11 @@ class CNotifoMod : public CModule
 				send_message(msg, title, channel.GetName());
 			}
 
+			return CONTINUE;
+		}
+
+		EModRet OnJoin(const CNick& nick,CChan& channel)
+		{
 			return CONTINUE;
 		}
 
