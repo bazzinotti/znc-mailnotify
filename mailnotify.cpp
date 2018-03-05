@@ -26,7 +26,7 @@ using std::string;
 #endif
 
 // Debug output
-#define NOTIFO_DEBUG 0
+#define NOTIFO_DEBUG 1
 
 #if NOTIFO_DEBUG
 #define PutDebug(s) PutModule(s)
@@ -401,6 +401,7 @@ class CNotifoMod : public CModule
      */
     bool highlight_join(const CString& message, const CString& highlight_str)
     {
+      PutDebug("checking Join nick: " + message);
       CString msg = " " + message + " ";
     
       VCString values;
