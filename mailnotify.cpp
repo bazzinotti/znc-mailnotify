@@ -173,7 +173,7 @@ class CNotifoMod : public CModule
 			strftime(iso8601, 20, "%Y-%m-%d %H:%M:%S", timeinfo);
 
 			// forge the mailcmd
-			CString cmd = "echo -e \"Subject:" + options["email_subject"] + "\n" + options["email_header"] + "\n'" + message + "'\n\" | sendmail " + options["email_address"];
+			CString cmd = "echo -e 'Subject:" + options["email_subject"] + "\n" + options["email_header"] + "\n" + message + "\n' | sendmail " + options["email_address"];
 
 			// create a new exec thread
 			int pid;
@@ -676,7 +676,7 @@ class CNotifoMod : public CModule
         CString msg = channel.GetName();
         msg += ": " + nick.GetNick();
         msg += " has joined!";
-
+        PutDebug(msg);
         send_message(msg, title, channel.GetName());
       }
 
