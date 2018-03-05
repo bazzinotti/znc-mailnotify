@@ -393,6 +393,46 @@ class CNotifoMod : public CModule
 			return false;
 		}
 
+    /**
+     * Determine if the given message matches any highlight rules.
+     *
+     * @param message Message contents
+     * @return True if message matches a highlight
+     */
+    bool highlight_join(const CString& message, const CString& highlight_str)
+    {
+      CString msg = " " + message + " ";
+    
+      VCString values;
+      highlight_str.Split(" ", values, false);
+    
+      for (VCString::iterator i = values.begin(); i != values.end(); i++)
+      {
+        CString value = i;//->AsLower();
+        char prefix = value[0];
+        bool notify = true;
+    
+        /*if (prefix == '-')
+        {
+          notify = false;
+          value.LeftChomp(1);
+        }
+        else if (prefix == '_')
+        {
+          value = " " + value.LeftChomp_n(1) + " ";
+        }*/
+    
+        value = "*" + value + "*";
+    
+        if (msg.WildCmp(value))
+        {
+          return notify;
+        }
+      }
+
+  return false;
+}
+
 		/**
 		 * Check if the idle condition is met.
 		 *
@@ -515,7 +555,7 @@ class CNotifoMod : public CModule
     {
       return away_only()
         && client_count_less_than()
-        && highlight(nick.GetNick(), options["highlight_join"])
+        && highlight_join(nick.GetNick(), options["highlight_join"])
         && idle()
         && nick_blacklist(nick)
         && true;
