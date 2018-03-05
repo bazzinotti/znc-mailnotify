@@ -26,7 +26,7 @@ using std::string;
 #endif
 
 // Debug output
-#define NOTIFO_DEBUG 1
+#define NOTIFO_DEBUG 0
 
 #if NOTIFO_DEBUG
 #define PutDebug(s) PutModule(s)
