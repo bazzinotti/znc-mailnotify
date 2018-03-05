@@ -663,6 +663,7 @@ class CNotifoMod : public CModule
 		{
       if (notify_join(nick))
       {
+        PutDebug("NotifyJoin Match!");
         CString title = "Join Highlight";
         CString msg = channel.GetName();
         msg += ": " + nick.GetNick();
